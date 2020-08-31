@@ -1,0 +1,395 @@
+---
+title: "PSC 505- Introduction to ggplot2"
+author: "Ezgi Siir Kibris"
+date: "8/29/2020"
+output: pdf_document 
+toc: TRUE
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.width=5, fig.height=3,echo = TRUE)
+```
+
+
+\newpage
+
+# 1.Installation
+
+install.packages("ggplot2")
+
+
+# 2.Grammer of graphics
+
+The ggplot2 package, created by Hadley Wickham, offers a powerful graphics language for creating elegant and complex plots. It is originally based on Wilkinson's The Grammar of Graphics (2005).
+
+## 2.1. Key components
+
+1. **Data**: data set
+2. **Aesthetic mapping**: aes, x and y variables
+3. **Layers**: geometric elemets, geoms: geom_point(), geom_smooth(), geom_bar(),...
+4. **Labels**: title, x and y axis labels
+5. **Theme**: Font size, background, legend
+6. **Facet**: Number of graphs, subsets
+
+- put + sign between each layer. + sign has to come at the end of the line, not the start! 
+
+
+# 3. Building a plot layer by layer
+
+
+Using fuel economy data set, we are going to plot figures layer by layer. This data set includes information about the fuel economy of popular car models in 1999 and 2008, collected by the US Environmental Protection Agency. 
+
+The variables of data set:
+
+- *cty* and *hwy*: record miles per gallon (mpg) for city and highway  driving.
+
+- *displ*: the engine displacement in litres.
+
+- *model*: model of car
+
+- *drv*: drivetrain, fron wheel (f), rear wheel (r) or four wheel (4).
+
+- *class*: type of car: two setaer, SUV, compact, etc.
+
+\newpage
+## 3.1. Basic setup
+
+```{r}
+library(ggplot2)
+```
+
+Here in this graph, data set is mpg, aesthetic mapping is defined by engine size mapped to x axis, and fuel economy to y axis.
+```{r}
+p=ggplot(data=mpg, mapping=aes(displ,hwy))
+p
+```
+
+
+
+## 3.2. The Layers
+
+Some useful geom functions:
+
+- **geom_point()**: Scatter plot
+- **geom_smooth()**: Fits a smoother to the data and displays the smooth and its standard error.
+- **geom_line()**: Draws lines between the data points.
+- **geom_bar()**: Barchart, shows the distribution of categorical variables
+- **geom_boxplot()**: Produces a box-and-whisker plot to summarize the distribution of a set of points.
+- **geom_jitter()** : Adds some random noise to scatter plot to avoid overplotting.
+- **geom_abline()**:  Draws regression line specifying the intercept and the slope of the line.
+
+\newpage
+
+### 3.2.1. Scatter Plot
+
+```{r}
+p + geom_point()
+```
+
+
+
+```{r}
+p + geom_point(size=3,color="red")
+```
+
+\newpage
+
+
+
+
+```{r}
+ggplot(data=mpg, aes(displ,hwy, color=class)) + 
+  geom_point()
+```
+
+```{r}
+ggplot(data=mpg, aes(displ,hwy, color=factor(cyl))) + 
+  geom_point()
+```
+
+
+
+
+\newpage
+
+```{r}
+ggplot(data=mpg, aes(displ,hwy, color=factor(cyl))) + 
+  geom_point(aes(shape=drv))
+```
+
+
+
+
+### 3.2.2. Line Chart
+```{r}
+p + geom_line(color="blue")
+```
+\newpage
+
+```{r}
+ggplot(data=mpg, aes(displ,hwy))+geom_point()+geom_line()
+```
+
+Adding a smoothered line
+
+
+```{r,warning=FALSE}
+ggplot(data=mpg, aes(displ,hwy))+geom_point()+geom_smooth()
+```
+
+\newpage
+Fitting linear model and adding the line of best fit
+```{r,warning=FALSE}
+ggplot(data=mpg, aes(displ,hwy))+geom_point()+
+  geom_smooth(method="lm",se=FALSE) # no confidence intervals
+```
+
+
+
+
+
+
+### 3.2.3. Bar Chart
+
+
+```{r}
+ggplot(mpg, aes(class)) + geom_bar() 
+
+```
+
+
+\newpage
+```{r}
+ggplot(mpg, aes(class,fill=drv)) + geom_bar() 
+```
+
+
+
+### 3.2.4. Boxplot
+
+```{r}
+
+ggplot(data=mpg, aes(drv,hwy))+geom_boxplot()
+```
+
+
+
+\newpage
+## 3.3. The Labels
+
+```{r}
+ggplot(data=mpg, aes(displ,hwy, color=class)) + 
+  geom_point()+labs(title="Engine size and fuel economy", subtitle="From mpg dataset",
+                    y="Highway mpg", x="Displacement", caption="Mpg")
+
+```
+
+
+```{r}
+ggplot(data=mpg, aes(displ,hwy, color=factor(cyl))) + 
+  geom_point(aes(shape=drv))+ xlab ("") + ylab("high driving mpg") 
+```
+
+\newpage
+## 3.4. The Theme
+
+
+
+```{r}
+p2=ggplot(data=mpg, aes(displ,hwy, color=class)) + 
+  geom_point()
+p2
+```
+
+
+
+```{r}
+p2 + theme(plot.title=element_text(size=30, face="bold"), 
+                  axis.text.x=element_text(size=10), 
+                  axis.text.y=element_text(size=15),
+                  axis.title.x=element_text(size=20),
+                  axis.title.y=element_text(size=25))
+```
+
+
+
+\newpage
+```{r}
+p2+labs(title="Black and white theme")+theme_bw()
+
+```
+
+
+
+
+
+```{r}
+p2+labs(title="Dark theme")+theme_dark()
+```
+
+\newpage
+
+```{r}
+p2+labs(title="Classic theme")+theme_classic()
+```
+
+```{r}
+p2+labs(title="Minimal theme")+theme_minimal()
+```
+
+
+
+
+
+\newpage
+
+## 3.5. The Facets
+
+
+```{r, warning=FALSE}
+ggplot(data=mpg, aes(displ,hwy)) + 
+  geom_point()+
+  geom_smooth()+
+  facet_wrap(~year)
+```
+
+
+
+```{r,warning=FALSE}
+ggplot(data=mpg, aes(displ,hwy)) + 
+  geom_point()+
+  geom_smooth()+
+  facet_wrap(~class)
+```
+
+
+\newpage
+
+```{r,warning=FALSE}
+p2+facet_grid(class~year)
+```
+
+
+
+
+# 4. Time series plots
+
+
+Economics data set contains economic data on the US measure over last 40 years. The figure below shows unemployment over time.
+
+
+```{r}
+ts=ggplot(economics, aes (date,unemploy))+
+  geom_line()
+ts
+```
+
+```{r}
+ts+scale_x_date(date_labels="%Y",date_breaks = "5 years")
+```
+
+
+```{r}
+ts+scale_x_date(date_labels="%y")
+```
+
+\newpage
+
+```{r}
+ts+scale_x_date(date_labels = "%B %y")
+```
+
+
+For more about date_labels, see: <https://www.r-bloggers.com/customizing-time-and-date-scales-in-ggplot2>
+
+
+
+
+
+
+# 5. Playing with colors
+
+
+## 5.1. RColorBrewer palettes
+
+The RColorBrewer package creates a nice looking color palettes. You should first install it as follow: install.packages("RColorBrewer").
+
+To display all the color palettes in the package, type this:
+
+
+```{r, eval=F, echo=T}
+library(RColorBrewer)
+display.brewer.all()
+display.brewer.all(colorblindFriendly = TRUE) # display only colorblind-friendly brewer palettes
+```
+
+\newpage
+
+```{r}
+ggplot(mpg, aes(class,fill=drv)) + geom_bar()+scale_fill_brewer(palette="Accent")
+```
+
+
+```{r}
+base=ggplot(mpg, aes (cty,hwy,color=factor(cyl)))+
+  geom_jitter() +
+  geom_abline(color="grey50",size=2)
+
+base
+```
+
+\newpage
+```{r}
+base+scale_color_brewer(palette="Spectral")+theme(legend.position = "bottom")
+```
+
+
+
+
+
+## 5.2. Wes Anderson movie color palettes
+
+It contains 16 color palettes from Wes Anderson movies:
+
+```{r}
+library("wesanderson")
+ggplot(mtcars, aes(factor(cyl), fill=factor(vs))) +  geom_bar() +
+  scale_fill_manual(values = wes_palette("Zissou1"))
+```
+
+\newpage
+
+```{r}
+
+
+ggplot(mpg, aes(class,fill=drv)) + geom_bar()+
+  scale_fill_manual(values = wes_palette("GrandBudapest2"))
+```
+
+## 5.3. Create your own color pallette
+
+```{r}
+cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
+          "#F0E442", "#0072B2", "#D55E00", "#CC79A7") #colorblind-friendly palette
+
+ggplot(data=mpg, aes(displ,hwy, color=factor(cyl))) + 
+  geom_point()+scale_color_manual(values = cbp1)
+```
+
+\newpage
+
+# 6. References
+
+
+Wickham, H., & Grolemund, G. (2017). R for data science: Import, tidy, transform, visualize, and model data (First ed.). Beijing, [China]: O'Reilly.
+
+
+Wickham, H.(2016). ggplot2 Elegant graphics for Data Analysis (Second ed.). Houston, TX: Springer.
+
+
+<http://r-statistics.co/ggplot2-Tutorial-With-R.html>
+
+<https://www.datanovia.com/en/blog/top-r-color-palettes-to-know-for-great-data-visualization>
+
+<https://www.r-bloggers.com/customizing-time-and-date-scales-in-ggplot2/>
