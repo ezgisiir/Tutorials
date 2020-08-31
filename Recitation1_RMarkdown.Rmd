@@ -1,0 +1,112 @@
+---
+title: "PSC 505- R Markdown Tutorial"
+author: "Ezgi Siir Kibris"
+date: "8/31/2020"
+output: pdf_document # html_document # word_document #beamer_presentation #powerpoint_presentation
+toc: TRUE # to include table of contents
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+\newpage
+
+## 1. Introduction to R Markdown
+
+To install R Markdown: install.packages("rmarkdown").
+
+Open a new R Markdown file in RStudio by navigating to File > New File > R Markdown… R Markdown files have the file extension “.Rmd”
+
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.  Another useful website is <https://www.dataquest.io/blog/r-markdown-guide-cheatsheet>.
+
+
+In general, R Markdown is a way to integrate text and R code all in one place. The novelty is that you can write as you would in a text document, but you can also add R code. When you compile the document, also knowing as *knitting* the document, the text will print, the R code will run, and the resulting R output will be displayed.
+
+
+To switch from writing text to writing R code, you will want to type on a new line ` ```{r} `. To then switch back from R to regular text, you will want to type ` ``` ` on a new line. Once you have opened R, you should notice that the background color switches from white to grey. 
+
+You can quickly insert chunks into your R Markdown file with the keyboard shortcut Cmd + Option + I (Windows Ctrl + Alt + I). You can also have code chunks in other programming languages such as Python and SQL.
+
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. (Note that to bold text, you can use **text**, or you can do $\textbf{text}$). You can embed an R code chunk like this: 
+
+```{r}
+summary(cars)
+```
+\newpage
+
+
+## 2. Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot. 
+
+You can also embed R code directly into your comments. For example, there are `r nrow(pressure)` observations. 
+
+See <http://www.stat.cmu.edu/~cshalizi/rmarkdown/>
+
+
+
+\newpage
+
+
+### 2.1. Plot Size Options
+
+You can change the figure size by adding fig.height and fig.width to code chunk.
+
+```{r, fig.height=3, fig.width=5, include=TRUE}
+plot(pressure)
+```
+
+
+## 3. Adding Formulas
+
+If you want to type in LaTeX mathm mode in line, you need to use the \$ symbol. For example, we can write $\alpha_1^2+\frac{3}{4}$ 
+
+
+Or, you can use \$\$ to denote a math chuck. 
+
+
+
+$$
+\sum_{i=1}^n \left(\frac{x_i^2}{3+i}\right)\\
+\sigma^2+3\times\beta
+$$
+
+
+## 4. Output Format Options
+
+You can change output as **html_document**, **word_document**, **beamer_presentation** or **powerpoint_presentation** to have different formats. 
+
+
+## 5. Adding Table of Contents
+
+You can include table of contents in your document by typing  **toc: TRUE** in the beginning of the Rmd file.
+
+
+## 6. Text Formatting options
+
+Note that the ## command gives a heading 
+
+# Header 1 {.unlisted .unnumbered} 
+## Header 2 {.unlisted .unnumbered}
+### Header 3 {.unlisted .unnumbered}
+
+\newpage
+
+Unordered List
+
+- Item 1
+- Item 2
+    + Item 2a
+    + Item 2b
+
+For more text formatting options see in RStudio: Help > Markdown Quick Reference
+
